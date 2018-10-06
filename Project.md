@@ -11,7 +11,7 @@
 	4. Password
 	5. Level(Id)
 	6. Experience
-	7. Role
+	7. Role(FK Role(Id))
 
 ### Role
 	1. Id
@@ -26,19 +26,19 @@
 	2. Name
 	3. Description
 	4. Experience_award
-	5. Level_required
+	5. Level_required(FK Level(Id))
 	6. Solution
-	7. Creator
+	7. Creator(FK User(Id))
 
 ### Article
 	1. Id
 	2. Name
 	3. Content
-	4. Author 
+	4. Author(FK User(Id))
 
 ### Task_status
-	1. User (pk)
-	2. Task (pk)
+	1. User (pk, FK User(Id))
+	2. Task (pk, FK Task(Id))
 	3. Status
 
 ## Функции
