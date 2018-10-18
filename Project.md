@@ -3,7 +3,7 @@
 Приложение, помогающее в обучении и запоминании информации
 
 ## Сущности
-
+![alt text](https://github.com/Programeezy/PyTrainer/blob/master/scheme.png?raw=true)
 ### User
 	1. Id
 	2. Name
