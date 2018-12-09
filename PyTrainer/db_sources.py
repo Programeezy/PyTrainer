@@ -1,5 +1,7 @@
+from bs4 import BeautifulSoup
 import psycopg2
-
+import pprint
+import requests
 
 conn = psycopg2.connect("dbname=django_db user=anton password=3ie8 host=127.0.0.1")
 cur = conn.cursor()
@@ -17,12 +19,50 @@ cur.execute(
           name TEXT NOT NULL,
           content TEXT NOT NULL);""")
 
+# ---Insert into Article--------------------------------------------
+
+cur.execute('SELECT * FROM article')
+articles = cur.fetchall()
+
+if not articles:
+    page = requests.get('https://qz.com/quartzy/latest/')
+    soup = BeautifulSoup(page.content.decode('utf-8', 'ignore'), 'html.parser')
+
+    web_links = soup.find_all('article')
+    page_links = []
+    for link in web_links[5:]:
+        url = link.contents[0].find_all('a')[0]
+        page_links.append('http://qz.com'+url.get('href'))
+
+    the_articles = []
+    for link in page_links:
+        paragraph_text = []
+        url = link
+        page = requests.get(url)
+        soup = BeautifulSoup(page.text, 'html.parser')
+        the_title = soup.find(class_="_21349 _9a905 none _4ca8e").text
+        article_body = soup.find(class_='_61c55 _6923f')
+        article_text = soup.find_all('p')[8:]
+        for paragraph in article_text[:-1]:
+            text = paragraph.text
+            paragraph_text.append(text)
+        paragraph_text = '\n\n'.join(paragraph_text)
+
+        cur.execute(
+            "INSERT INTO article (name, content) VALUES(%s, %s)",
+            (the_title, paragraph_text))
+    conn.commit()
+
 # ---Insert into Task-----------------------------------------------
 
-cur.execute(
-    "INSERT INTO task (status, description, solution) VALUES(%s, %s, %s)",
-    ('unsolved', 'Извлекиет все слова в text, начинающиеся на гласную букву', r"re.findall(r'\w+', text)"))
-conn.commit()
+cur.execute('SELECT * FROM task')
+tasks = cur.fetchall()
+
+if not tasks:
+    cur.execute(
+        "INSERT INTO task (status, description, solution) VALUES(%s, %s, %s)",
+        ('unsolved', 'Извлекиет все слова в text, начинающиеся на гласную букву', r"re.findall(r'\w+', text)"))
+    conn.commit()
 
 cur.close()
 conn.close()
