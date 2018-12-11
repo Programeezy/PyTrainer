@@ -31,39 +31,28 @@
                         Start Bootstrap
                     </a>
                 </li>
-                <li>
-                    <a href="#">Test section 1</a>
-                </li>
-                <li>
-                    <a href="#">Test section 2</a>
-                </li>
-                <li>
-                    <a href="#">Test section 3</a>
-                </li>
-                <li>
-                    <a href="#">Test section 4</a>
-                </li>
-                <li>
-                    <a href="#">Test section 5</a>
-                </li>
-                <li>
-                    <a href="#">Test section 6</a>
-                </li>
-                <li>
-                    <a href="#">Test section 7</a>
-                </li>
+                <!--create the difference-->
+                <li><a href="{%url 'task'%}">Solve task</a></li>
+                <li><a href="#">Test section 2</a></li>
+                <li><a href="#">Test section 3</a></li>
+                <li><a href="#">Test section 4</a></li>
+                <li><a href="#">Test section 5</a></li>
+                <li><a href="#">Test section 6</a></li>
+                <li><a href="#">Test section 7</a></li>
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
-        <div id="page-content-wrapper">
+        <div>
             <div class="container-fluid">
-                <h1>Simple Sidebar</h1>
-                <p>Just words.</p>
-                <p>And other words.</p>
-                <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Menu</a>
+                <a style="margin-top: 2%" href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">Menu</a>
             </div>
+        </div>
+
+        <div>
+            {% block content %}
+            {% endblock %}
         </div>
         <!-- /#page-content-wrapper -->
 

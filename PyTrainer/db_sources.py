@@ -61,7 +61,8 @@ tasks = cur.fetchall()
 if not tasks:
     cur.execute(
         "INSERT INTO task (status, description, solution) VALUES(%s, %s, %s)",
-        ('unsolved', 'Извлекиет все слова в text, начинающиеся на гласную букву', r"re.findall(r'\w+', text)"))
+        ('unsolved', 'Выведите список, содержащий все слова из статьи, начинающиеся на гласную букву',
+         "import re\nprint(re.findall(r'\w+', article))"))
     conn.commit()
 
 cur.close()
