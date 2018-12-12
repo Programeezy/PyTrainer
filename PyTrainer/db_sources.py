@@ -17,7 +17,7 @@ cur.execute(
     """CREATE TABLE IF NOT EXISTS article (
           id SERIAL PRIMARY KEY,
           name TEXT NOT NULL,
-          content TEXT NOT NULL);""")
+          content TEXT ARRAY NOT NULL);""")
 
 # ---Insert into Article--------------------------------------------
 
@@ -46,7 +46,7 @@ if not articles:
         for paragraph in article_text[:-1]:
             text = paragraph.text
             paragraph_text.append(text)
-        paragraph_text = '\n\n'.join(paragraph_text)
+        paragraph_text = [s.replace('\xa0', ' ') for s in paragraph_text]
 
         cur.execute(
             "INSERT INTO article (name, content) VALUES(%s, %s)",
@@ -61,8 +61,9 @@ tasks = cur.fetchall()
 if not tasks:
     cur.execute(
         "INSERT INTO task (status, description, solution) VALUES(%s, %s, %s)",
-        ('unsolved', 'Выведите список, содержащий все слова из статьи, начинающиеся на гласную букву',
-         "import re\nprint(re.findall(r'\w+', article))"))
+        ('unsolved',
+         'Return a string containing all the words from the article starting with a vowel separated by a space',
+         r"' '.join(re.findall(r'\b[aeiouAEIOU]\w+', article))"))
     conn.commit()
 
 cur.close()
