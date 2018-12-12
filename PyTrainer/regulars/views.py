@@ -19,20 +19,17 @@ def get_task(request):
     articles = cur.fetchall()
     first_article = articles[0]
     article = ' '.join(first_article[2])
-    print(article)
     article_result = eval(task[3])
     context = {'task_id': task[0],
                'status': task[1],
                'description': task[2],
-               'solution': task[3],
+               'solution': "def solution(article):\n    # write code here\n    return ''",
                'name': first_article[1],
                'content': first_article[2],
                'article_result': article_result}
-
     if request.method == 'POST':
-        solution = request.POST['solution']
-        if solution == task[3]:
-            return HttpResponse('Solution is correct!')
-        else:
-            return HttpResponse('Solution is not correct!')
+        solution_code = request.POST['solution_code']
+        exec(solution_code, globals())
+        context['result'] = solution(article)
+        context['solution'] = solution_code
     return render(request, 'regulars/task.html', context=context)
