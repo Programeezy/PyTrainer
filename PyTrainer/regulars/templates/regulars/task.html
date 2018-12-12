@@ -2,14 +2,30 @@
 {% block content %}
     <div class="font-weight-light" style="margin-left: 2%">
         <h3 class="display-4">Task {{ task_id }}</h3>
-        <p style="font-size: xx-large;">Problem: {{ description }}</p>
+        <p style="font-size: xx-large; line-height: normal">Problem: {{ description }}</p>
         <form method="post">
             {% csrf_token %}
-            <textarea style="width: 50%; height: 200px;" type="text" name="solution_code">{{ solution }}</textarea>
-            <textarea readonly wrap="off" style="width: 50%; height: 50px; overflow: auto;">{{ result }}</textarea>
+            <div style="width: 100%; height: 250px">
+                <div style="display: inline-block; float: left; width: 49%">
+                    <textarea class="form-control" style="width: 100%; height: 200px;" type="text" name="solution_code"
+                    >{{ solution }}</textarea>
+                    <textarea readonly class="form-control no-gray" wrap="off" style="width: 100%; margin-top: 5px; height: 50px;
+                    overflow: auto;" >{{ result }}</textarea>
+                </div>
+                <div style="display: inline-block; visibility: {{ visibility }}; float: right; width: 50%;
+                margin-right: 0.5%">
+                    <p style="font-size: x-large; height: 35px; margin: 0">Error on test {{ failed_test }}</p>
+                    <p style="font-size: x-large; height: 35px; margin: 0">Your output:</p>
+                    <textarea readonly class="form-control no-gray" wrap="off" style="width: 100%; height: 47px;
+                    overflow: auto; alignment: left; margin: 0">{{ failed_output }}</textarea>
+                    <p style="font-size: x-large; height: 35px; margin: 0">Expected output:</p>
+                    <textarea readonly class="form-control no-gray" wrap="off" style="width: 100%; height: 48px;
+                    alignment: left; margin: 0">{{ right_output }}</textarea>
+                </div>
+            </div>
             <br>
-            <button name="run" type="submit">Run</button>
-            <button name="submit" type="submit">Submit</button>
+            <button class="btn btn-outline-dark" name="run" type="submit">Run</button>
+            <button class="btn btn-outline-dark" name="submit" type="submit">Submit</button>
             <div id="unique_name" style="display:none;">
                 <p>Content goes here.</p>
             </div>
@@ -20,6 +36,7 @@
             <p style="font-size: large">{{ paragraph }}</p>
         {% endfor %}
         <p style="font-size: xx-large">Expected output:</p>
-        <textarea readonly wrap="off" style="width: 50%; height: 50px; overflow: auto">{{ article_result }}</textarea>
+        <textarea readonly class="form-control no-gray" wrap="off" style="width: 50%; height: 50px; overflow: auto">{{ article_result }}</textarea>
     </div>
+    <br>
 {% endblock %}
