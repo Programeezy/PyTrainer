@@ -104,19 +104,32 @@ if not tasks:
         ('unsolved', 'A string of vowels',
          'Return a string containing all the words from the article starting with a vowel separated by a space',
          r"' '.join(re.findall(r'\b[aeiouAEIOU]\w+', article))"))
+
+    cur.execute(
+        "INSERT INTO task (status, name, description, solution) VALUES(%s, %s, %s, %s)",
+        ('unsolved', 'Simplified string',
+         "Return a string where in place of the following characters: ',', ':', '^' and '?' there will be spaces.",
+         r"' '.join(re.split(r'[;,\s]', article))"))
+
+    cur.execute(
+        "INSERT INTO task (status, name, description, solution) VALUES(%s, %s, %s, %s)",
+        ('unsolved', 'Letter number letter',
+         "Return the number of digits in the string, surrounded by not number on both sides.",
+         r"len(re.findall(r'(?<!\d)\d(?!\d)', article))"))
+
     conn.commit()
 
-    cur.execute('SELECT * FROM task')
-    tasks = cur.fetchall()
-    cur.execute('SELECT id FROM task_log')
-    task_log_ids = cur.fetchall()
-    for task in tasks:
-        if task[0] not in task_log_ids:
-            cur.execute(
-                "INSERT INTO task_log (task_id, name, description, solution, date) VALUES(%s, %s, %s, %s, now())",
-                (task[0], task[2], task[3], task[4])
-            )
-    conn.commit()
+cur.execute('SELECT * FROM task')
+tasks = cur.fetchall()
+cur.execute('SELECT id FROM task_log')
+task_log_ids = cur.fetchall()
+for task in tasks:
+    if task[0] not in task_log_ids:
+        cur.execute(
+            "INSERT INTO task_log (task_id, name, description, solution, date) VALUES(%s, %s, %s, %s, now())",
+            (task[0], task[2], task[3], task[4])
+        )
+conn.commit()
 
 cur.close()
 conn.close()
