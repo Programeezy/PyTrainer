@@ -10,7 +10,7 @@ def main(request):
 
 def get_task(request):
     tasks = db_methods.get_tasks()
-    task = tasks[2]
+    task = tasks[0]
     articles = db_methods.get_articles()
     len_articles = len(articles)
     first_article = articles[-1]
@@ -80,3 +80,13 @@ def show_tasks(request):
                            'solution': task[4]})
     context = {'tasks': dict_tasks}
     return render(request, 'regulars/tasks.html', context=context)
+
+
+def show_articles(request):
+    articles = db_methods.get_articles()
+    dict_articles = []
+    for article in articles:
+        dict_articles.append({'id': article[0],
+                              'name': article[1]})
+    context = {'articles': dict_articles}
+    return render(request, 'regulars/articles.html', context=context)
