@@ -2,7 +2,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <style>
-   textarea { resize: both; }
+    textarea { resize: both; }
+
+    .table td, .table th {
+        border: none;
+    }
+
+    table.table.table-condensed {
+        border: 3px solid lightgrey;
+    }
+
 </style>
 <head>
     <meta charset="utf-8">
@@ -28,7 +37,6 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static "PyTrainer/css/simple-sidebar.css" %}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
 </head>
 
 <body>
@@ -40,9 +48,9 @@
             <ul class="sidebar-nav">
                 <li class="sidebar-brand"><a href="#">PyTrainer</a></li>
                 <!--create the difference-->
-                <li><a href="{%url 'task'%}">Solve task</a></li>
-                <li><a href="{%url 'history'%}">History</a></li>
-                <li><a href="#">Test section 3</a></li>
+                <li><a href="{% url 'task' %}">Solve task</a></li>
+                <li><a href="{% url 'history' %}">History</a></li>
+                <li><a href="{% url 'tasks' %}">Tasks</a></li>
                 <li><a href="#">Test section 4</a></li>
                 <li><a href="#">Test section 5</a></li>
                 <li><a href="#">Test section 6</a></li>
