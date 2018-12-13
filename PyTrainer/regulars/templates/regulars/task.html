@@ -1,7 +1,7 @@
 {% extends 'regulars/index.html' %}
 {% block content %}
     <div class="font-weight-light" style="margin-left: 2%">
-        <h3 class="display-4">Task {{ task_id }}</h3>
+        <h3 class="display-4">Task '{{ task_name }}'</h3>
         <p style="font-size: xx-large; line-height: normal">Problem: {{ description }}</p>
         <form method="post">
             {% csrf_token %}
