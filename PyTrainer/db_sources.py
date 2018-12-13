@@ -37,6 +37,15 @@ cur.execute(
           content TEXT NOT NULL,
           date TIMESTAMP NOT NULL);""")
 
+cur.execute(
+    """CREATE TABLE IF NOT EXISTS attempt (
+          id SERIAL PRIMARY KEY,
+          task_id INTEGER REFERENCES task(id),
+          task_name TEXT NOT NULL,
+          solution TEXT NOT NULL,
+          passed_tests TEXT NOT NULL,
+          date TIMESTAMP NOT NULL);""")
+
 # ---Insert into Article--------------------------------------------
 
 cur.execute('SELECT name FROM article')
