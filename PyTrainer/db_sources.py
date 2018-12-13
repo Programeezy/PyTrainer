@@ -49,7 +49,7 @@ cur.execute(
 # ---Insert into Article--------------------------------------------
 
 cur.execute('SELECT name FROM article')
-articles_names = cur.fetchall()
+articles_names = [lst[0] for lst in cur.fetchall()]
 
 page = requests.get('https://qz.com/quartzy/latest/')
 soup = BeautifulSoup(page.content.decode('utf-8', 'ignore'), 'html.parser')
@@ -84,7 +84,7 @@ conn.commit()
 cur.execute('SELECT * FROM article')
 articles = cur.fetchall()
 cur.execute('SELECT id FROM article_log')
-article_log_ids = cur.fetchall()
+article_log_ids = [lst[0] for lst in cur.fetchall()]
 for article in articles:
     if article[0] not in article_log_ids:
         cur.execute(
@@ -122,7 +122,7 @@ if not tasks:
 cur.execute('SELECT * FROM task')
 tasks = cur.fetchall()
 cur.execute('SELECT id FROM task_log')
-task_log_ids = cur.fetchall()
+task_log_ids = [lst[0] for lst in cur.fetchall()]
 for task in tasks:
     if task[0] not in task_log_ids:
         cur.execute(
