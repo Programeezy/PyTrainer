@@ -10,7 +10,7 @@ def main(request):
 
 def get_task(request):
     tasks = db_methods.get_tasks()
-    task = random.choice(tasks)
+    task = tasks[2]
     articles = db_methods.get_articles()
     len_articles = len(articles)
     first_article = articles[-1]
