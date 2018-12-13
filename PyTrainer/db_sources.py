@@ -27,6 +27,7 @@ cur.execute(
           name TEXT NOT NULL,
           description TEXT NOT NULL,
           solution TEXT NOT NULL,
+          operation TEXT NOT NULL,
           date TIMESTAMP NOT NULL);""")
 
 cur.execute(
@@ -35,6 +36,7 @@ cur.execute(
           article_id integer REFERENCES article(id),
           name TEXT NOT NULL,
           content TEXT NOT NULL,
+          operation TEXT NOT NULL,
           date TIMESTAMP NOT NULL);""")
 
 cur.execute(
@@ -88,8 +90,8 @@ article_log_ids = [lst[0] for lst in cur.fetchall()]
 for article in articles:
     if article[0] not in article_log_ids:
         cur.execute(
-            "INSERT INTO article_log (article_id, name, content, date) VALUES(%s, %s, %s, now())",
-            (article[0], article[1], article[2])
+            "INSERT INTO article_log (article_id, name, content, operation, date) VALUES(%s, %s, %s, %s, now())",
+            (article[0], article[1], article[2], 'creation')
         )
 conn.commit()
 
@@ -126,8 +128,9 @@ task_log_ids = [lst[0] for lst in cur.fetchall()]
 for task in tasks:
     if task[0] not in task_log_ids:
         cur.execute(
-            "INSERT INTO task_log (task_id, name, description, solution, date) VALUES(%s, %s, %s, %s, now())",
-            (task[0], task[2], task[3], task[4])
+            """INSERT INTO task_log (task_id, name, description, solution, operation, date)
+            VALUES(%s, %s, %s, %s, %s, now())""",
+            (task[0], task[2], task[3], task[4], 'creation')
         )
 conn.commit()
 

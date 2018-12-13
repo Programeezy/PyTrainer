@@ -90,3 +90,27 @@ def show_articles(request):
                               'name': article[1]})
     context = {'articles': dict_articles}
     return render(request, 'regulars/articles.html', context=context)
+
+
+def show_actions(request):
+    dict_actions = []
+    attempts = db_methods.get_attempts()
+    for attempt in attempts:
+        dict_actions.append({'type': 'attempt',
+                             'process': 'submit',
+                             'name': attempt[2],
+                             'date': attempt[5]})
+    article_logs = db_methods.get_article_logs()
+    for article_log in article_logs:
+        dict_actions.append({'type': 'article_log',
+                             'process': article_log[4],
+                             'name': article_log[2],
+                             'date': article_log[5]})
+    task_logs = db_methods.get_task_logs()
+    for task_log in task_logs:
+        dict_actions.append({'type': 'task_log',
+                             'process': task_log[5],
+                             'name': task_log[2],
+                             'date': task_log[6]})
+    context = {'actions': sorted(dict_actions, key=lambda k: k['date'], reverse=True)}
+    return render(request, 'regulars/actions.html', context=context)

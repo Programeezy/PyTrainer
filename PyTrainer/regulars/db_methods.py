@@ -41,3 +41,23 @@ def add_attempt(task_id, task_name, solution, passed_tests):
     conn.commit()
     cur.close()
     conn.close()
+
+
+def get_article_logs():
+    conn = psycopg2.connect("dbname=django_db user=anton password=3ie8 host=127.0.0.1")
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM article_log')
+    article_logs = cur.fetchall()
+    cur.close()
+    conn.close()
+    return article_logs
+
+
+def get_task_logs():
+    conn = psycopg2.connect("dbname=django_db user=anton password=3ie8 host=127.0.0.1")
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM task_log')
+    task_logs = cur.fetchall()
+    cur.close()
+    conn.close()
+    return task_logs
