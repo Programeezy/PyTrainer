@@ -5,10 +5,12 @@ from django.shortcuts import render, redirect, HttpResponse
 
 
 def main(request):
-    return render(request, 'regulars/main_page.html')
+    context = {'user_name': db_methods.find_active()}
+    return render(request, 'regulars/main_page.html', context=context)
 
 
 def get_task(request):
+    print(db_methods.find_active())
     tasks = db_methods.get_tasks()
     task = tasks[0]
     articles = db_methods.get_articles()
@@ -24,7 +26,8 @@ def get_task(request):
                'name': first_article[1],
                'content': first_article[2],
                'article_result': article_result,
-               'visibility': 'hidden'}
+               'visibility': 'hidden',
+               'user_name': db_methods.find_active()}
     if request.method == 'POST':
         solution_code = request.POST['solution_code']
         context['solution'] = solution_code
@@ -66,7 +69,7 @@ def show_history(request):
                                   'date': attempt[5],
                                   'color': 'table-danger' if bool(attempt[4].split('/')[0] != str(len_articles))
                                   else 'table-success'})
-    context = {'attempts': filtered_attempts}
+    context = {'attempts': filtered_attempts, 'user_name': db_methods.find_active()}
     return render(request, 'regulars/history.html', context=context)
 
 
@@ -78,7 +81,7 @@ def show_tasks(request):
                            'status': task[1],
                            'name': task[2],
                            'solution': task[4]})
-    context = {'tasks': dict_tasks}
+    context = {'tasks': dict_tasks, 'user_name': db_methods.find_active()}
     return render(request, 'regulars/tasks.html', context=context)
 
 
@@ -88,7 +91,7 @@ def show_articles(request):
     for article in articles:
         dict_articles.append({'id': article[0],
                               'name': article[1]})
-    context = {'articles': dict_articles}
+    context = {'articles': dict_articles, 'user_name': db_methods.find_active()}
     return render(request, 'regulars/articles.html', context=context)
 
 
@@ -112,5 +115,55 @@ def show_actions(request):
                              'process': task_log[5],
                              'name': task_log[2],
                              'date': task_log[6]})
-    context = {'actions': sorted(dict_actions, key=lambda k: k['date'], reverse=True)}
+    context = {'actions': sorted(dict_actions, key=lambda k: k['date'], reverse=True),
+               'user_name': db_methods.find_active()}
     return render(request, 'regulars/actions.html', context=context)
+
+
+def login(request):
+    users = db_methods.get_users()
+    if users:
+        if request.method == 'POST' and 'sign_in' in request.POST:
+            username = request.POST['username']
+            password = request.POST['password']
+            context = {'username': username}
+            for user in users:
+                if username == user[1]:
+                    if password == user[2]:
+                        db_methods.set_user_activity(username, True)
+                        print(db_methods.find_active())
+                        return redirect('main')
+                    else: # сделать красивое подсвечивание, что пароль неверный
+                        return render(request, 'registration/login.html', context=context)
+    else:
+        return redirect('register')
+    return render(request, 'registration/login.html')
+
+
+def register(request):
+    users = db_methods.get_users()
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        password_ident = request.POST['password_ident']
+        key = request.POST['key']
+        for user in users:
+            if username == user[1]: # сделать красивое подсвечивание, что пароль неверный
+                return render(request, 'registration/register.html')
+        else:
+            if password == password_ident and password:
+                if key:
+                    for user in users:
+                        if key == user[4]:
+                            db_methods.add_user(username, password, 'superuser')
+                            return redirect('main')
+                else:
+                    db_methods.add_user(username, password)
+                    return redirect('main')
+    return render(request, 'registration/register.html') # сделать красивое подсвечивание,чт ключ неверный
+
+
+def logout(request):
+    active_user_name = db_methods.find_active()
+    db_methods.set_user_activity(active_user_name, False)
+    return redirect('main')

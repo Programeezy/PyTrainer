@@ -7,6 +7,15 @@ conn = psycopg2.connect("dbname=django_db user=anton password=3ie8 host=127.0.0.
 cur = conn.cursor()
 
 cur.execute(
+    """CREATE TABLE IF NOT EXISTS db_user (
+          id SERIAL PRIMARY KEY,
+          name TEXT NOT NULL,
+          password TEXT NOT NULL,
+          role TEXT NOT NULL,
+          is_active BOOL NOT NULL,
+          invitation_key TEXT);""")
+
+cur.execute(
     """CREATE TABLE IF NOT EXISTS task ( 
           id SERIAL PRIMARY KEY,
           status TEXT NOT NULL,

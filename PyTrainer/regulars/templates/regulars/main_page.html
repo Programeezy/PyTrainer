@@ -46,15 +46,27 @@
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
-                <li class="sidebar-brand"><a href="#">PyTrainer</a></li>
-                <!--create the difference-->
+                <li class="sidebar-brand">
+                    {% if user_name %}
+                        <a href="">Welcome, {{ user_name }}</a>
+                    {% else %}
+                        <a href="{% url 'login' %}">Sing in</a>
+                    {% endif %}
+                </li>
+                <!--create the difference maybe-->
                 <li><a href="{% url 'task' %}">Solve task</a></li>
                 <li><a href="{% url 'history' %}">History</a></li>
                 <li><a href="{% url 'tasks' %}">Tasks</a></li>
                 <li><a href="{% url 'articles' %}">Articles</a></li>
                 <li><a href="{% url 'actions' %}">Actions</a></li>
                 <li><a href="#">Test section 6</a></li>
-                <li><a href="#">Test section 7</a></li>
+                <li>
+                    {% if user_name %}
+                        <a href="{% url 'logout' %}">Sign out</a>
+                    {% else %}
+                        <a href="{% url 'register' %}">Sign up</a>
+                    {% endif %}
+                </li>
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
