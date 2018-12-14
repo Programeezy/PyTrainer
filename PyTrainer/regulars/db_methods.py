@@ -61,3 +61,46 @@ def get_task_logs():
     cur.close()
     conn.close()
     return task_logs
+
+
+def get_users():
+    conn = psycopg2.connect("dbname=django_db user=anton password=3ie8 host=127.0.0.1")
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM db_user')
+    users = cur.fetchall()
+    cur.close()
+    conn.close()
+    return users
+
+
+def add_user(user_name, user_password, role='user'):
+    conn = psycopg2.connect("dbname=django_db user=anton password=3ie8 host=127.0.0.1")
+    cur = conn.cursor()
+    cur.execute(
+        "INSERT INTO db_user (name, password, role, is_active) VALUES(%s, %s, %s, %s)",
+        (user_name, user_password, role, False)
+    )
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+def find_active():
+    conn = psycopg2.connect("dbname=django_db user=anton password=3ie8 host=127.0.0.1")
+    cur = conn.cursor()
+    cur.execute('SELECT * FROM db_user')
+    users = cur.fetchall()
+    for user in users:
+        if user[4]:
+            return user[1]
+    cur.close()
+    conn.close()
+
+
+def set_user_activity(user_name, value):
+    conn = psycopg2.connect("dbname=django_db user=anton password=3ie8 host=127.0.0.1")
+    cur = conn.cursor()
+    cur.execute('UPDATE db_user SET is_active = %s WHERE name = %s;', (value, user_name))
+    conn.commit()
+    cur.close()
+    conn.close()
