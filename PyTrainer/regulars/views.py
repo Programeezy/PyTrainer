@@ -5,13 +5,21 @@ from django.shortcuts import render, redirect, HttpResponse
 
 
 def main(request):
+    db_methods.attempt_admin()
     context = {'user_name': db_methods.find_active()}
     return render(request, 'regulars/main_page.html', context=context)
 
 
 def get_task(request):
     if db_methods.find_active():
-        print(db_methods.find_active())
+        tasks = db_methods.get_tasks()
+        if not tasks:
+            db_methods.fill_tasks()
+
+        articles = db_methods.get_articles()
+        if not articles:
+            db_methods.fill_articles()
+
         tasks = db_methods.get_tasks()
         task = tasks[0]
         articles = db_methods.get_articles()
@@ -67,11 +75,11 @@ def show_history(request):
         filtered_attempts = list()
         for attempt in attempts:
             filtered_attempts.append({'id': attempt[0],
-                                      'task_name': attempt[2],
-                                      'solution': attempt[3],
-                                      'passed_tests': attempt[4],
-                                      'date': attempt[5],
-                                      'color': 'table-danger' if bool(attempt[4].split('/')[0] != str(len_articles))
+                                      'task_name': attempt[3],
+                                      'solution': attempt[4],
+                                      'passed_tests': attempt[5],
+                                      'date': attempt[6],
+                                      'color': 'table-danger' if bool(attempt[5].split('/')[0] != str(len_articles))
                                       else 'table-success'})
         context = {'attempts': filtered_attempts, 'user_name': db_methods.find_active()}
         return render(request, 'regulars/history.html', context=context)
@@ -114,8 +122,8 @@ def show_actions(request):
         for attempt in attempts:
             dict_actions.append({'type': 'attempt',
                                  'process': 'submit',
-                                 'name': attempt[2],
-                                 'date': attempt[5]})
+                                 'name': attempt[3],
+                                 'date': attempt[6]})
         article_logs = db_methods.get_article_logs()
         for article_log in article_logs:
             dict_actions.append({'type': 'article_log',
@@ -150,6 +158,8 @@ def login(request):
                             return redirect('main')
                         else: # сделать красивое подсвечивание, что пароль неверный
                             return render(request, 'registration/login.html', context=context)
+            elif 'sign_up' in request.POST:
+                return redirect('register')
         else:
             return redirect('register')
         return render(request, 'registration/login.html')
