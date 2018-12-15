@@ -109,6 +109,16 @@ def set_user_activity(user_name, value):
     conn.close()
 
 
+def update_task_status(task_id, value='solved'):
+    conn = psycopg2.connect("dbname=django_db user=anton password=3ie8 host=127.0.0.1")
+    cur = conn.cursor()
+    cur.execute('UPDATE task SET status = %s WHERE ((id = %s) AND (creator = %s));',
+                (value, task_id, get_active_user_id()))
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
 def get_active_user_id():
     conn = psycopg2.connect("dbname=django_db user=anton password=3ie8 host=127.0.0.1")
     cur = conn.cursor()
@@ -221,7 +231,20 @@ def attempt_admin():
     cur.execute('SELECT * FROM db_user WHERE role = %s', ('admin', ))
     admin_users = cur.fetchall()
     if not admin_users:
+        print(1)
         cur.execute(
             "INSERT INTO db_user (name, password, role, is_active, invitation_key) VALUES(%s, %s, %s, %s, %s)",
             ('admin', 'admin', 'admin', False, '2kf94ye4o8')
         )
+    conn.commit()
+    cur.close()
+    conn.close()
+
+
+def delete_user(user_name):
+    conn = psycopg2.connect("dbname=django_db user=anton password=3ie8 host=127.0.0.1")
+    cur = conn.cursor()
+    cur.execute('DELETE FROM db_user WHERE name = %s', (user_name, ))
+    conn.commit()
+    cur.close()
+    conn.close()

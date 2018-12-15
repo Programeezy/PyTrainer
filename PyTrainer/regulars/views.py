@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect, HttpResponse
 
 def main(request):
     db_methods.attempt_admin()
-    context = {'user_name': db_methods.find_active()}
+    context = {'user_name': db_methods.find_active(), 'empty_page': True}
     return render(request, 'regulars/main_page.html', context=context)
 
 
@@ -21,7 +21,21 @@ def get_task(request):
             db_methods.fill_articles()
 
         tasks = db_methods.get_tasks()
-        task = tasks[0]
+        for unknown_task in tasks:
+            if unknown_task[1] == 'unsolved':
+                return redirect('solve_task', task_id=unknown_task[0])
+        return redirect('tasks')
+    else:
+        return redirect('main')
+
+
+def solve_task(request, task_id):
+    if db_methods.find_active():
+        tasks = db_methods.get_tasks()
+        task = ''
+        for unknown_task in tasks:
+            if unknown_task[0] == task_id:
+                task = unknown_task
         articles = db_methods.get_articles()
         len_articles = len(articles)
         first_article = articles[-1]
@@ -53,7 +67,7 @@ def get_task(request):
                     article = ' '.join(one_article[2])
                     article_result = eval(task[4])
                     if article_result != solution(article):
-                        wrong_test = str(ind+1) + '/' + str(len_articles)
+                        wrong_test = str(ind + 1) + '/' + str(len_articles)
                         context['failed_test'] = wrong_test
                         context['failed_output'] = solution(article)
                         context['right_output'] = article_result
@@ -61,11 +75,12 @@ def get_task(request):
                         db_methods.add_attempt(task[0], task[2], 'wrong', wrong_test)
                         break
                 else:
+                    db_methods.update_task_status(task[0])
                     db_methods.add_attempt(task[0], task[2], 'correct', str(len_articles) + '/' + str(len_articles))
                     return redirect('history')
         return render(request, 'regulars/task.html', context=context)
     else:
-        return redirect('main')
+        redirect('main')
 
 
 def show_history(request):
@@ -91,11 +106,12 @@ def show_tasks(request):
     if db_methods.find_active():
         tasks = db_methods.get_tasks()
         dict_tasks = []
+        active_user = db_methods.find_active()
         for task in tasks:
             dict_tasks.append({'id': task[0],
                                'status': task[1],
                                'name': task[2],
-                               'solution': task[4]})
+                               'solution': task[4] if active_user == 'admin' else 'hidden'})
         context = {'tasks': dict_tasks, 'user_name': db_methods.find_active()}
         return render(request, 'regulars/tasks.html', context=context)
     else:
@@ -156,7 +172,7 @@ def login(request):
                         if password == user[2]:
                             db_methods.set_user_activity(username, True)
                             return redirect('main')
-                        else: # сделать красивое подсвечивание, что пароль неверный
+                        else:
                             return render(request, 'registration/login.html', context=context)
             elif 'sign_up' in request.POST:
                 return redirect('register')
@@ -176,19 +192,19 @@ def register(request):
             password_ident = request.POST['password_ident']
             key = request.POST['key']
             for user in users:
-                if username == user[1]: # сделать красивое подсвечивание, что пароль неверный
+                if username == user[1]:
                     return render(request, 'registration/register.html')
             else:
                 if password == password_ident and password:
                     if key:
                         for user in users:
-                            if key == user[4]:
+                            if key == user[5]:
                                 db_methods.add_user(username, password, 'superuser')
                                 return redirect('main')
                     else:
                         db_methods.add_user(username, password)
                         return redirect('main')
-        return render(request, 'registration/register.html') # сделать красивое подсвечивание,чт ключ неверный
+        return render(request, 'registration/register.html')
     else:
         return redirect('main')
 
@@ -197,4 +213,11 @@ def logout(request):
     active_user_name = db_methods.find_active()
     if active_user_name:
         db_methods.set_user_activity(active_user_name, False)
+    return redirect('main')
+
+
+def delete_user(request):
+    active_user_name = db_methods.find_active()
+    if active_user_name:
+        db_methods.delete_user(active_user_name)
     return redirect('main')
