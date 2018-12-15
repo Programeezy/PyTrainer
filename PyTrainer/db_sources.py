@@ -20,19 +20,19 @@ cur.execute(
           name TEXT NOT NULL,
           description TEXT NOT NULL,
           solution TEXT NOT NULL,
-          creator INTEGER REFERENCES db_user(id));""")
+          creator INTEGER REFERENCES db_user(id) ON DELETE CASCADE);""")
 
 cur.execute(
     """CREATE TABLE IF NOT EXISTS article (
           id SERIAL PRIMARY KEY,
           name TEXT NOT NULL,
           content TEXT ARRAY NOT NULL,
-          creator INTEGER REFERENCES db_user(id));""")
+          creator INTEGER REFERENCES db_user(id) ON DELETE CASCADE);""")
 
 cur.execute(
     """CREATE TABLE IF NOT EXISTS task_log (
           task_id INTEGER REFERENCES task(id),
-          user_id INTEGER REFERENCES db_user(id),
+          user_id INTEGER REFERENCES db_user(id) ON DELETE CASCADE,
           name TEXT NOT NULL,
           description TEXT NOT NULL,
           solution TEXT NOT NULL,
@@ -43,7 +43,7 @@ cur.execute(
 cur.execute(
     """CREATE TABLE IF NOT EXISTS article_log (
           article_id INTEGER REFERENCES article(id),
-          user_id INTEGER REFERENCES db_user(id),
+          user_id INTEGER REFERENCES db_user(id) ON DELETE CASCADE,
           name TEXT NOT NULL,
           content TEXT NOT NULL,
           operation TEXT NOT NULL,
@@ -53,7 +53,7 @@ cur.execute(
 cur.execute(
     """CREATE TABLE IF NOT EXISTS attempt (
           id SERIAL PRIMARY KEY,
-          user_id INTEGER REFERENCES db_user(id),
+          user_id INTEGER REFERENCES db_user(id) ON DELETE CASCADE,
           task_id INTEGER REFERENCES task(id),
           task_name TEXT NOT NULL,
           solution TEXT NOT NULL,

@@ -48,9 +48,9 @@
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
                     {% if user_name %}
-                        <a href="">Welcome, {{ user_name }}</a>
+                        <a href="{% url 'main' %}">Welcome, {{ user_name }}!</a>
                     {% else %}
-                        <a href="{% url 'login' %}">Sing in</a>
+                        <a href="{% url 'login' %}">Sign in</a>
                     {% endif %}
                 </li>
                 <!--create the difference maybe-->
@@ -58,8 +58,8 @@
                 <li><a href="{% url 'history' %}">History</a></li>
                 <li><a href="{% url 'tasks' %}">Tasks</a></li>
                 <li><a href="{% url 'articles' %}">Articles</a></li>
-                <li><a href="{% url 'actions' %}">Actions</a></li>
-                <li><a href="#">Test section 6</a></li>
+                <li><a href="{% url 'actions' %}">Log</a></li>
+                <li><a href="{% url 'delete_user' %}">Delete account</a></li>
                 <li>
                     {% if user_name %}
                         <a href="{% url 'logout' %}">Sign out</a>
@@ -72,8 +72,11 @@
         <!-- /#sidebar-wrapper -->
 
         <!-- Page Content -->
-        <a style="margin-top: 10px; margin-left: 2%" href="#menu-toggle" class="btn btn-light" id="menu-toggle"
-        >&#9776;</a>
+        <a style="margin-top: 10px; margin-left: 2%" href="#menu-toggle" class="btn btn-light" id="menu-toggle">&#9776;</a>
+        {% if empty_page %}
+           <p class="font-weight-light" style="font-size: xx-large; line-height: normal; margin-left: 2%"
+           >Sign up, train, have fun with PyTrainer!</p>
+        {% endif %}
 
         <div>
             {% block content %}
