@@ -1,0 +1,31 @@
+{% extends 'regulars/main_page.html' %}
+{% block content %}
+    {% if attempts %}
+        <div style="margin-left: 2%; margin-right: 2%; margin-top: 10px">
+            <table style="width: 100%;" class="table table-condensed">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col">Task name</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Passed tests</th>
+                        <th scope="col">Date submit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for attempt in attempts reversed %}
+                        <tr class="{{ attempt.color }}">
+                            <th scope="row">{{ attempt.id }}</th>
+                            <td>{{ attempt.task_name }}</td>
+                            <td>{{ attempt.solution }}</td>
+                            <td>{{ attempt.passed_tests }}</td>
+                            <td>{{ attempt.date }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="font-weight-light" style="font-size: xx-large; margin-left: 2%">Start solving task!</p>
+    {% endif %}
+{% endblock %}

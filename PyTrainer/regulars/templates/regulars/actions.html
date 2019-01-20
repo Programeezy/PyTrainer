@@ -1,0 +1,29 @@
+{% extends 'regulars/main_page.html' %}
+{% block content %}
+    {% if actions %}
+        <div style="margin-left: 2%; margin-right: 2%; margin-top: 10px">
+            <table style="width: 100%;" class="table table-condensed">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Type</th>
+                        <th scope="col">Process</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for action in actions %}
+                        <tr>
+                            <th scope="row">{{ action.type }}</th>
+                            <td>{{ action.process }}</td>
+                            <td>{{ action.name }}</td>
+                            <td>{{ action.date }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="font-weight-light" style="font-size: xx-large; margin-left: 2%">Do something!</p>
+    {% endif %}
+{% endblock %}

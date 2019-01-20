@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    textarea { resize: both; }
+
+    .table td, .table th {
+        border: none;
+    }
+
+    table.table.table-condensed {
+        border: 3px solid lightgrey;
+    }
+
+</style>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>PyTrainer</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static "PyTrainer/vendor/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static "PyTrainer/css/simple-sidebar.css" %}" rel="stylesheet">
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    {% if user_name %}
+                        <a href="{% url 'main' %}">Welcome, {{ user_name }}!</a>
+                    {% else %}
+                        <a href="{% url 'login' %}">Sign in</a>
+                    {% endif %}
+                </li>
+                <!--create the difference maybe-->
+                <li><a href="{% url 'task' %}">Solve task</a></li>
+                <li><a href="{% url 'history' %}">History</a></li>
+                <li><a href="{% url 'tasks' %}">Tasks</a></li>
+                <li><a href="{% url 'articles' %}">Articles</a></li>
+                <li><a href="{% url 'actions' %}">Log</a></li>
+                <li><a href="{% url 'delete_user' %}">Delete account</a></li>
+                <li>
+                    {% if user_name %}
+                        <a href="{% url 'logout' %}">Sign out</a>
+                    {% else %}
+                        <a href="{% url 'register' %}">Sign up</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <a style="margin-top: 10px; margin-left: 2%" href="#menu-toggle" class="btn btn-light" id="menu-toggle">&#9776;</a>
+        {% if empty_page %}
+           <p class="font-weight-light" style="font-size: xx-large; line-height: normal; margin-left: 2%"
+           >Sign up, train, have fun with PyTrainer!</p>
+        {% endif %}
+
+        <div>
+            {% block content %}
+            {% endblock %}
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static "PyTrainer/vendor/jquery/jquery.min.js" %}"></script>
+    <script src="{% static "PyTrainer/vendor/bootstrap/js/bootstrap.bundle.min.js" %}"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
+</body>
+
+</html>
