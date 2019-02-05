@@ -1,2 +1,5 @@
-.idea
+.idea/
 PyTrainer/PyTrainer/__pycache__/
+PyTrainer/regulars/__pycache__/
+PyTrainer/regulars/migrations/__pycache__/
+PyTrainer/static/
