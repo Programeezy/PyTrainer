@@ -1,6 +1,5 @@
 import psycopg2
 
-
 conn = psycopg2.connect("dbname=django_db user=anton password=3ie8 host=127.0.0.1")
 cur = conn.cursor()
 
@@ -10,7 +9,6 @@ cur.execute(
           name TEXT NOT NULL,
           password TEXT NOT NULL,
           role TEXT NOT NULL,
-          is_active BOOL NOT NULL,
           invitation_key TEXT);""")
 
 cur.execute(
@@ -60,6 +58,12 @@ cur.execute(
           passed_tests TEXT NOT NULL,
           date TIMESTAMP NOT NULL);""")
 
+cur.execute(
+    """CREATE EXTENSION IF NOT EXISTS pgcrypto;
+       CREATE TABLE IF NOT EXISTS db_session (
+          session_key uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+          expiration_time TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          user_id INTEGER REFERENCES db_user(id) ON DELETE CASCADE);""")
 conn.commit()
 
 cur.close()
