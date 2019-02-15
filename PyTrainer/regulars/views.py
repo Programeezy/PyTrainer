@@ -14,10 +14,15 @@ def get_task(request):
     cur.execute('SELECT * FROM task')
     tasks = cur.fetchall()
     task = random.choice(tasks)
+    cur.execute('SELECT * FROM article')
+    articles = cur.fetchall()
+    article = random.choice(articles)
     content = {'task_id': task[0],
                'status': task[1],
                'description': task[2],
-               'solution': task[3]}
+               'solution': task[3],
+               'name': article[0],
+               'content': article[1]}
 
     if request.method == 'POST':
         solution = request.POST['solution']

@@ -1,16 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <h3>Task {{ task_id }}</h3>
-    <p>{{ description }}</p>
-    <form method="post">
-        {% csrf_token %}
-        <input type="text" name="solution"/>
-        <button type="submit">Submit</button>
-    </form>
-</body>
-</html>
+{% extends 'regulars/index.html' %}
+{% block content %}
+    <script type="text/javascript">
+        function toggle_visibility(id) {
+            var e = document.getElementById(id);
+            if(e.style.display == 'block')
+                e.style.display = 'none';
+            else
+                e.style.display = 'block';
+        }
+    </script>
+    <div style="margin-left: 2%">
+        <h3>Task {{ task_id }}</h3>
+        <p>Problem:</p>
+        <p>{{ description }}</p>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="solution"/>
+            <button onclick="toggle_visibility('unique_name');" type="submit">Submit</button>
+            <div id="unique_name" style="display:none;">
+                <p>Content goes here.</p>
+            </div>
+        </form>
+    </div>
+{% endblock %}
