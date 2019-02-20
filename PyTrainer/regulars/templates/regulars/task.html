@@ -9,10 +9,9 @@
                 e.style.display = 'block';
         }
     </script>
-    <div style="margin-left: 2%">
-        <h3>Task {{ task_id }}</h3>
-        <p>Problem:</p>
-        <p>{{ description }}</p>
+    <div class="font-weight-light" style="margin-left: 2%">
+        <h3 class="display-4">Task {{ task_id }}</h3>
+        <p style="font-size: xx-large;">Problem: {{ description }}</p>
         <form method="post">
             {% csrf_token %}
             <input type="text" name="solution"/>
@@ -21,5 +20,12 @@
                 <p>Content goes here.</p>
             </div>
         </form>
+        <p style="font-size: xx-large">Example:</p>
+        <p style="font-size: x-large">{{ name }}</p>
+        {% for paragraph in content %}
+            <p style="font-size: large">{{ paragraph }}</p>
+        {% endfor %}
+        <p style="font-size: xx-large">Expected output:</p>
+        <textarea readonly>{{ article_result }}</textarea>
     </div>
 {% endblock %}
