@@ -1,21 +1,15 @@
 {% extends 'regulars/index.html' %}
 {% block content %}
-    <script type="text/javascript">
-        function toggle_visibility(id) {
-            var e = document.getElementById(id);
-            if(e.style.display == 'block')
-                e.style.display = 'none';
-            else
-                e.style.display = 'block';
-        }
-    </script>
     <div class="font-weight-light" style="margin-left: 2%">
         <h3 class="display-4">Task {{ task_id }}</h3>
         <p style="font-size: xx-large;">Problem: {{ description }}</p>
         <form method="post">
             {% csrf_token %}
-            <input type="text" name="solution"/>
-            <button onclick="toggle_visibility('unique_name');" type="submit">Submit</button>
+            <textarea style="width: 50%; height: 200px;" type="text" name="solution_code">{{ solution }}</textarea>
+            <textarea readonly wrap="off" style="width: 50%; height: 50px; overflow: auto;">{{ result }}</textarea>
+            <br>
+            <button name="run" type="submit">Run</button>
+            <button name="submit" type="submit">Submit</button>
             <div id="unique_name" style="display:none;">
                 <p>Content goes here.</p>
             </div>
@@ -26,6 +20,6 @@
             <p style="font-size: large">{{ paragraph }}</p>
         {% endfor %}
         <p style="font-size: xx-large">Expected output:</p>
-        <textarea readonly>{{ article_result }}</textarea>
+        <textarea readonly wrap="off" style="width: 50%; height: 50px; overflow: auto">{{ article_result }}</textarea>
     </div>
 {% endblock %}
