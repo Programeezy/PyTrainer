@@ -4,8 +4,8 @@ from . import db_methods
 from django.shortcuts import render, redirect, HttpResponse
 
 
-def index(request):
-    return render(request, 'regulars/index.html')
+def main(request):
+    return render(request, 'regulars/main_page.html')
 
 
 def get_task(request):
@@ -69,3 +69,14 @@ def show_history(request):
     context = {'attempts': filtered_attempts}
     return render(request, 'regulars/history.html', context=context)
 
+
+def show_tasks(request):
+    tasks = db_methods.get_tasks()
+    dict_tasks = []
+    for task in tasks:
+        dict_tasks.append({'id': task[0],
+                           'status': task[1],
+                           'name': task[2],
+                           'solution': task[4]})
+    context = {'tasks': dict_tasks}
+    return render(request, 'regulars/tasks.html', context=context)

@@ -1,0 +1,29 @@
+{% extends 'regulars/main_page.html' %}
+{% block content %}
+    {% if tasks %}
+        <div style="margin-left: 2%; margin-right: 2%; margin-top: 10px">
+            <table style="width: 100%;" class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th scope="col">№</th>
+                        <th scope="col">Task name</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Solution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                        <tr>
+                            <th scope="row">{{ task.id }}</th>
+                            <td>{{ task.name }}</td>
+                            <td>{{ task.status }}</td>
+                            <td>{{ task.solution }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="font-weight-light" style="font-size: xx-large; margin-left: 2%">There are no tasks</p>
+    {% endif %}
+{% endblock %}
