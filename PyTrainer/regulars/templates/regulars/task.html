@@ -7,10 +7,10 @@
             {% csrf_token %}
             <div style="width: 100%; height: 250px">
                 <div style="display: inline-block; float: left; width: 49%">
-                    <textarea class="form-control" style="width: 100%; height: 200px;" type="text" name="solution_code"
-                    >{{ solution }}</textarea>
-                    <textarea readonly class="form-control no-gray" wrap="off" style="width: 100%; margin-top: 5px; height: 50px;
-                    overflow: auto;" >{{ result }}</textarea>
+                    <textarea class="form-control" style="width: 100%; height: 200px;
+                    overflow: auto" type="text" name="solution_code">{{ solution }}</textarea>
+                    <textarea readonly class="form-control no-gray" wrap="off" style="width: 100%; margin-top: 5px;
+                    height: 50px; overflow-y: hidden;" >{{ result }}</textarea>
                 </div>
                 <div style="display: inline-block; visibility: {{ visibility }}; float: right; width: 50%;
                 margin-right: 0.5%">

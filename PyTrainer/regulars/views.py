@@ -1,7 +1,7 @@
 import random
 import re
 from . import db_methods
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, redirect, HttpResponse
 
 
 def index(request):
@@ -11,9 +11,9 @@ def index(request):
 def get_task(request):
     tasks = db_methods.get_tasks()
     task = random.choice(tasks)
-    print(task)
     articles = db_methods.get_articles()
-    first_article = articles[0]
+    len_articles = len(articles)
+    first_article = articles[-1]
     article = ' '.join(first_article[2])
     article_result = eval(task[4])
     context = {'task_id': task[0],
@@ -27,24 +27,45 @@ def get_task(request):
                'visibility': 'hidden'}
     if request.method == 'POST':
         solution_code = request.POST['solution_code']
-        exec(solution_code, globals())
         context['solution'] = solution_code
-        if 'run' in request.POST:
+        try:
+            exec(solution_code, globals())
             context['result'] = solution(article)
-        elif 'submit' in request.POST:
-            articles = db_methods.get_articles()
+        except Exception as e:
+            context['result'] = e
+            return render(request, 'regulars/task.html', context=context)
+        if 'submit' in request.POST:
+            articles = db_methods.get_articles()[::-1]
             for ind, art in enumerate(articles):
                 one_article = articles[ind]
                 article = ' '.join(one_article[2])
                 article_result = eval(task[4])
                 if article_result != solution(article):
-                    context['failed_test'] = str(ind+1) + '/' + str(len(articles))
+                    wrong_test = str(ind+1) + '/' + str(len_articles)
+                    context['failed_test'] = wrong_test
                     context['failed_output'] = solution(article)
                     context['right_output'] = article_result
                     context['visibility'] = 'visible'
+                    db_methods.add_attempt(task[0], task[2], 'wrong', wrong_test)
                     break
             else:
-                return HttpResponse('woooow!')
+                db_methods.add_attempt(task[0], task[2], 'correct', str(len_articles) + '/' + str(len_articles))
+                return redirect('history')
     return render(request, 'regulars/task.html', context=context)
 
+
+def show_history(request):
+    attempts = db_methods.get_attempts()
+    len_articles = len(db_methods.get_articles())
+    filtered_attempts = list()
+    for attempt in attempts:
+        filtered_attempts.append({'id': attempt[0],
+                                  'task_name': attempt[2],
+                                  'solution': attempt[3],
+                                  'passed_tests': attempt[4],
+                                  'date': attempt[5],
+                                  'color': 'table-danger' if bool(attempt[4].split('/')[0] != str(len_articles))
+                                  else 'table-success'})
+    context = {'attempts': filtered_attempts}
+    return render(request, 'regulars/history.html', context=context)
 
