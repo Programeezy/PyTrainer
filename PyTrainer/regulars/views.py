@@ -1,6 +1,7 @@
 import re
 from . import db_methods
 from django.shortcuts import render, redirect, HttpResponse
+from django.http import JsonResponse
 
 
 def main(request):
@@ -212,6 +213,21 @@ def register(request):
         return render(request, 'registration/register.html')
     else:
         return redirect('main')
+
+
+def check_login(request):
+    print(request.method)
+    is_exist = False
+    if request.method == 'POST':
+        user_login = request.POST['user_login']
+        if user_login:
+            users = db_methods.get_users()
+            for user in users:
+                if user[1] == user_login:
+                    is_exist = True
+                    break
+    context = {'is_exist': is_exist}
+    return JsonResponse(context)
 
 
 def logout(request):

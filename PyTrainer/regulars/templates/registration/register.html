@@ -37,12 +37,32 @@
         {% csrf_token %}
         <div style="width: 300px; height: 350px; margin-bottom: 170px" class="form-group">
             <p style="font-size: xx-large; line-height: normal" align="center" class="font-weight-light">Sign up to PyTrainer</p>
-            <input type="text" class="form-control" style="width: 100%; height: 50px; margin-bottom: 20px" placeholder="Username" name="username">
+            <input type="text" class="form-control" style="width: 100%; height: 50px; margin-bottom: 20px" placeholder="Username" id="user_name" name="username">
             <input class="form-control" style="width: 100%; height: 50px; margin-bottom: 20px" placeholder="Password" type="password" name="password">
             <input class="form-control" style="width: 100%; height: 50px; margin-bottom: 20px" placeholder="Confirm password" type="password" name="password_ident">
             <input class="form-control" style="width: 100%; height: 50px; margin-bottom: 20px" type="password" name="key" placeholder="Invitation key. Filling is not necessary...">
             <button class="btn btn-outline-dark" style="width: 100%; height: 50px; margin-bottom: 20px" type="submit">Sign up</button>
         </div>
     </form>
+    <script>
+        $("#user_name").change(function () {
+            var user_login = $(this).val();
+
+            $.ajax({
+                url: '{% url "check_login" %}',
+                type: 'post',
+                data: {
+                    "user_login": user_login,
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.is_exist) {
+                        alert('A user with username ' + user_login + ' already exists.');
+                    }
+                }
+            })
+        })
+    </script>
 </body>
 </html>
